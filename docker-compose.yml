@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:16.2
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: youx
+      POSTGRES_USER: youx
+      POSTGRES_DB: tasy
+    ports:
+      - "5432:5432"
+networks:
+  default:
+    driver: bridge

@@ -1,8 +1,6 @@
 package com.youx.tasy.controller.funcionario;
 
-import com.youx.tasy.enums.Role;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record FuncionarioRequest(

@@ -1,16 +1,19 @@
-PRIVATE_KEY = private.key
-PUBLIC_KEY = public.key
-
-GEN_PRIVATE_KEY = openssl genpkey -algorithm RSA -out $(PRIVATE_KEY) -aes256
-GEN_PUBLIC_KEY = openssl rsa -pubout -in $(PRIVATE_KEY) -out $(PUBLIC_KEY)
-
-$(PRIVATE_KEY):
-	$(GEN_PRIVATE_KEY)
-
-$(PUBLIC_KEY): $(PRIVATE_KEY)
-	$(GEN_PUBLIC_KEY)
+KEY_DIR = src/main/resources
+PRIVATE_KEY = $(KEY_DIR)/private.key
+PUBLIC_KEY = $(KEY_DIR)/public.key
 
 key: $(PRIVATE_KEY) $(PUBLIC_KEY)
 
+$(PRIVATE_KEY): $(KEY_DIR)
+	@openssl genpkey -algorithm RSA -out $(PRIVATE_KEY) -pkeyopt rsa_keygen_bits:2048
+
+$(PUBLIC_KEY): $(PRIVATE_KEY)
+	@openssl rsa -pubout -in $(PRIVATE_KEY) -out $(PUBLIC_KEY)
+
+$(KEY_DIR):
+	@mkdir -p $(KEY_DIR)
+
 clean:
-	rm -f $(PRIVATE_KEY) $(PUBLIC_KEY)
+	rm -rf $(KEY_DIR)
+
+.PHONY: key clean

@@ -37,7 +37,7 @@ public class PacienteService {
         }
 
         String md5Cpf = Hash.criptografarMD5(request.cpf());
-        checkIfCpfIsExist(md5Cpf);
+        cpfExists(md5Cpf);
 
         var paciente = new Paciente();
 
@@ -58,7 +58,7 @@ public class PacienteService {
         }
 
         String md5Cpf = Hash.criptografarMD5(request.cpf());
-        checkIfCpfIsExist(md5Cpf);
+        cpfExists(md5Cpf);
 
         Paciente paciente = optPaciente.get();
         paciente.setNome(request.nome());
@@ -77,12 +77,10 @@ public class PacienteService {
         pacienteRepository.deleteById(id);
     }
 
-    private void checkIfCpfIsExist(String cpf){
-        Optional<Paciente> optPaciente = pacienteRepository.findByCPF(cpf);
-        var cpfIsExist = optPaciente.isEmpty();
-
-        if(!cpfIsExist){
-            throw new BusinessException("O CPF já é cadastrado", HttpStatus.CONFLICT);
-        }
+    private void cpfExists(String cpf){
+        pacienteRepository.findByCPF(cpf)
+        .ifPresent(paciente -> {
+            throw new BusinessException("O CPF já existe", HttpStatus.CONFLICT);
+        });
     }
 }
